@@ -19,7 +19,6 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 const upload = multer({ storage });
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
@@ -27,9 +26,16 @@ app.post('/analyze', upload.fields([{ name: 'resume' }, { name: 'photo' }]), asy
     try {
         const resumeFile = req.files?.['resume']?.[0] || null;
         const photoFile = req.files?.['photo']?.[0] || null;
+        const userApiKey = req.body.apiKey;
+
+        if (!userApiKey) {
+            return res.status(400).json({ error: 'A valid Google Gemini API Key is required.' });
+        }
 
         if (!resumeFile && !photoFile)
             return res.status(400).json({ error: 'Please upload a resume PDF or a profile photo.' });
+
+        const genAI = new GoogleGenerativeAI(userApiKey);
 
         const jobContext = req.body.jobDescription
             ? `\n\nJob Description:\n${req.body.jobDescription}` : '';

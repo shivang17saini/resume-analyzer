@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 const styles = `
@@ -93,11 +93,22 @@ export default function App() {
   const [resume, setResume] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [jobDesc, setJobDesc] = useState('');
+  const [apiKey, setApiKey] = useState(localStorage.getItem('geminiApiKey') || '');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const handleApiKeyChange = (e) => {
+    const val = e.target.value;
+    setApiKey(val);
+    localStorage.setItem('geminiApiKey', val);
+  };
+
   const handleSubmit = async () => {
+    if (!apiKey) {
+      setError('Please provide your Google Gemini API Key.');
+      return;
+    }
     if (!resume && !photo) {
       setError('Please upload a resume PDF or a profile photo.');
       return;
@@ -108,6 +119,7 @@ export default function App() {
     if (resume) formData.append('resume', resume);
     if (photo) formData.append('photo', photo);
     if (jobDesc) formData.append('jobDescription', jobDesc);
+    formData.append('apiKey', apiKey);
     try {
       const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
       const res = await axios.post(`${API_URL}/analyze`, formData, {
@@ -179,6 +191,22 @@ export default function App() {
                 <textarea className="textarea" rows={5} value={jobDesc}
                   onChange={e => setJobDesc(e.target.value)}
                   placeholder="Paste the job description for targeted keyword matching... (optional)" />
+              </div>
+
+              <div className="card" style={{ padding: '24px 32px' }}>
+                <div className="card-title">🔑 Google Gemini API Key</div>
+                <input 
+                  type="password" 
+                  className="textarea" 
+                  style={{ minHeight: '48px', height: '48px', padding: '12px 16px' }}
+                  value={apiKey}
+                  onChange={handleApiKeyChange}
+                  placeholder="Paste your Gemini API Key (starts with AIza...)"
+                />
+                <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '8px', lineHeight: '1.4' }}>
+                  Your key is stored locally in your browser and used securely to process the analysis. <br/>
+                  Get one for free at <a href="https://aistudio.google.com" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: '500' }}>Google AI Studio</a>.
+                </div>
               </div>
 
               {error && <div className="error-box">⚠️ {error}</div>}

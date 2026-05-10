@@ -17,6 +17,7 @@ An AI-powered resume analyzer that gives you an **ATS compatibility score**, ext
 - 🎯 **Job Description Matching** — Paste a job description for targeted analysis
 - 📸 **Photo Analysis** — Upload just a profile photo for professional suitability feedback
 - 🌙 **Dark UI** — Clean, modern dark-themed interface
+- 🔑 **Bring Your Own Key (BYOK)** — Securely use your own Gemini API key in the browser
 
 ---
 
@@ -50,9 +51,9 @@ cd backend
 npm install
 ```
 
-Create a `.env` file inside the `backend` folder:
+Create a `.env` file inside the `backend` folder (Optional: Only needed if you plan to hardcode a fallback key, otherwise users provide it via UI):
 ```
-GEMINI_API_KEY=your_google_ai_studio_api_key_here
+PORT=5000
 ```
 
 Start the backend:
@@ -113,8 +114,8 @@ resume-analyzer/
 
 ## 💡 How It Works
 
-1. User uploads a resume PDF and/or profile photo
-2. Backend passes the file buffers directly to Google Gemini
+1. User enters their **Gemini API Key** and uploads a resume/photo
+2. Backend passes the file buffers and the user's API key directly to Google Gemini
 3. The data is sent to Gemini 2.5 Flash with a structured prompt
 4. Gemini returns a JSON object with scores, skills, and recommendations
 5. Frontend renders the results in a clean dashboard
