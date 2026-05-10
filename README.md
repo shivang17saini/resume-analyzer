@@ -26,7 +26,7 @@ An AI-powered resume analyzer that gives you an **ATS compatibility score**, ext
 |---|---|
 | Frontend | React 18, Axios |
 | Backend | Node.js, Express |
-| AI | OpenAI GPT-3.5-turbo / GPT-4o |
+| AI | Google Gemini 2.5 Flash / Google AI Studio |
 | PDF Parsing | pdf-parse |
 | File Uploads | Multer |
 
@@ -36,7 +36,7 @@ An AI-powered resume analyzer that gives you an **ATS compatibility score**, ext
 
 ### Prerequisites
 - Node.js v16+
-- An OpenAI API key → [platform.openai.com](https://platform.openai.com)
+- A Google AI Studio API key → [aistudio.google.com](https://aistudio.google.com)
 
 ### 1. Clone the repository
 ```bash
@@ -52,7 +52,7 @@ npm install
 
 Create a `.env` file inside the `backend` folder:
 ```
-OPENAI_API_KEY=your_openai_api_key_here
+GEMINI_API_KEY=your_google_ai_studio_api_key_here
 ```
 
 Start the backend:
@@ -114,9 +114,9 @@ resume-analyzer/
 ## 💡 How It Works
 
 1. User uploads a resume PDF and/or profile photo
-2. Backend extracts text from the PDF using `pdf-parse`
-3. Text is sent to OpenAI GPT with a structured prompt
-4. GPT returns a JSON object with scores, skills, and recommendations
+2. Backend passes the file buffers directly to Google Gemini
+3. The data is sent to Gemini 2.5 Flash with a structured prompt
+4. Gemini returns a JSON object with scores, skills, and recommendations
 5. Frontend renders the results in a clean dashboard
 
 ---
@@ -125,8 +125,7 @@ resume-analyzer/
 
 - The `.env` file is **gitignored** — never commit your API key
 - Uploaded files are stored locally in `backend/uploads/`
-- PDF must be **text-based** (not a scanned image) for text extraction to work
-- Requires an OpenAI account with available credits
+- Requires a Google account to get the AI Studio API Key
 
 ---
 

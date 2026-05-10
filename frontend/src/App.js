@@ -109,7 +109,8 @@ export default function App() {
     if (photo) formData.append('photo', photo);
     if (jobDesc) formData.append('jobDescription', jobDesc);
     try {
-      const res = await axios.post('http://localhost:5000/analyze', formData, {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const res = await axios.post(`${API_URL}/analyze`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setResult(res.data);
@@ -199,7 +200,7 @@ export default function App() {
               <div className="score-section">
                 {result.photoUrl && (
                   <img className="profile-img"
-                    src={`http://localhost:5000${result.photoUrl}`} alt="Profile" />
+                    src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${result.photoUrl}`} alt="Profile" />
                 )}
                 <div className="score-label">
                   {isPhotoOnly ? 'Professional Photo Score' : 'ATS Compatibility Score'}
