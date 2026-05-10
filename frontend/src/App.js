@@ -98,6 +98,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    // Wake up the backend server (Render cold start mitigation)
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    axios.get(`${API_URL}/health`).catch(() => {});
+  }, []);
+
   const handleApiKeyChange = (e) => {
     const val = e.target.value;
     setApiKey(val);
